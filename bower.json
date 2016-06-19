@@ -1,0 +1,32 @@
+{
+  "name": "unClutter",
+  "description": "A file organizer",
+  "main": "main.js",
+  "authors": [
+    "Glenn Vandeuren"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "UnClutter"
+  ],
+  "homepage": "https://vandeurenglenn/unclutter",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "file-input": "VandeurenGlenn/file-input#^1.1.1",
+    "paper-dropdown-menu": "^1.2.1",
+    "paper-item": "^1.2.1",
+    "paper-listbox": "^1.1.2",
+    "paper-styles": "^1.1.4",
+    "theme-element": "^1.1.0",
+    "polymer": "Polymer#^1.5.0",
+    "iron-pages": "^1.0.7"
+  }
+}
