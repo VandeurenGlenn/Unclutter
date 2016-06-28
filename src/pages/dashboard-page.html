@@ -1,0 +1,101 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../un-icons.html">
+<dom-module id="dashboard-page">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+      }
+      .items-container {
+        width: calc(100% / 2);
+        height: 100%;
+
+        padding-top: 45px;
+      }
+      .dashboard-item {
+        min-width: 256px;
+        max-width: 512px;
+        width: calc(100% / 2);
+        /*height: calc(100% / 2);*/
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        float: left;
+      }
+      .dashboard-item-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.6em;
+      }
+      .dashboard-item-content span {
+        padding: 8px;
+        opacity: var(--light-primary-opacity);
+        color: #FFF;
+        text-transform: uppercase;
+        @apply(--paper-font-headline);
+      }
+      iron-icon {
+        --iron-icon-width: calc(100% / 2);
+        --iron-icon-height: calc(100% / 2);
+        opacity: var(--light-secondary-opacity);
+        color: #FFF;
+      }
+    </style>
+      <div class="items-container">
+        <div name="tasks" class="dashboard-item" on-tap="_goTasks">
+          <div class="dashboard-item-content">
+            <iron-icon icon="un-icons:tasks" size="48px"></iron-icon>
+            <span>tasks</span>
+          </div>
+        </div>
+
+        <div name="monitor" class="dashboard-item" on-tap="_goMonitor">
+          <div class="dashboard-item-content">
+            <iron-icon icon="un-icons:monitor" size="48px"></iron-icon>
+            <span>monitor</span>
+          </div>
+        </div>
+
+        <div name="timeline" class="dashboard-item" on-tap="_goTimeline">
+          <div class="dashboard-item-content">
+            <iron-icon icon="un-icons:timeline" size="48px"></iron-icon>
+            <span>timeline</span>
+          </div>
+        </div>
+        <unclutter-progress></unclutter-progress>
+      </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'dashboard-page',
+
+        properties: {
+          selected: {
+            type: String,
+            notify: true
+          }
+        },
+
+        _goTasks: function() {
+          app.selected = 'tasks';
+          // this.selected = Polymer.dom(event).target.getAttribute('name');
+        },
+
+        _goMonitor: function() {
+          app.selected = 'monitor';
+          // this.selected = Polymer.dom(event).target.getAttribute('name');
+        }
+      });
+    })();
+  </script>
+</dom-module>

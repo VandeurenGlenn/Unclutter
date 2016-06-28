@@ -1,0 +1,27 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<dom-module id="un-rules-shared-styles">
+  <template>
+    <style>
+      .rule-item-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.8em 0;
+      }
+      .headline {
+        padding-right: 0.6em;
+        @apply(--paper-font-headline);
+      }
+      .sectiontitle {
+        @apply(--paper-font-display1);
+      }
+      .headline, .sectiontitle {
+        text-transform: uppercase;
+      }
+      un-rule-input {
+        height: 36
+      }
+    </style>
+
+  </template>
+</dom-module>

@@ -1,0 +1,159 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../un-icons.html">
+<dom-module id="un-rule-select">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        width: 160px;
+      }
+      :host, .dropdown {
+        background: #FFF;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      .container {
+        padding: 0.4em 0.6em;
+        box-sizing: border-box;
+      }
+      select {
+        padding: 0.4em 0.6em;
+        height: 36px;
+        box-sizing: border-box;
+        background: inherit;
+        /*padding: 0.6em 0.8em;*/
+        border: none;
+        outline: none;
+      }
+      .select-box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.4em 0.6em;
+        height: 36px;
+        box-sizing: border-box;
+        background: inherit;
+        /*padding: 0.6em 0.8em;*/
+        border: none;
+        outline: none;
+      }
+      .flex {
+        flex: 1;
+      }
+      /*:host([dropdown-open]) .select-box {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.78);
+      }*/
+      .dropdown {
+        width: calc(160px - 39px);
+        position: absolute;
+        padding: 0.4em 0.6em;
+        will-change: opacity;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: opacity ease-out 0.16s, transform cubic-bezier(0.4, 0, 1, 1) 0.16s;
+      }
+      .dropdown, .dropdown option {
+        opacity: 0;
+      }
+      :host([dropdown-open]) .dropdown {
+        opacity: 1;
+        transform: scaleY(1);
+        transition: opacity ease-in 0.16s, transform ease-in 0.16s;
+      }
+      :host([dropdown-open]) .dropdown option {
+        opacity: 1;
+        transition: opacity ease-in 0.32s;
+      }
+      .label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        /*justify-content: center;*/
+      }
+    </style>
+    <div class="container" on-tap="_toggleDropdown">
+      <div class="select-box">
+        <span class="label">[[_computeLabel(label, name, selected)]]</span>
+        <span class="flex"></span>
+        <iron-icon icon="un-icons:arrow-drop-down"></iron-icon>
+      </div>
+      <!-- <select name="[[name]]" default="[[selected]]"> -->
+      <div class="dropdown">
+        <template is="dom-if" if="[[dropdownOpen]]">
+          <template is="dom-repeat" items="[[items]]">
+            <option value="[[item]]" on-tap="_onselect">[[item]]</option>
+          </template>
+        </template>
+      </div>
+      <!-- </select> -->
+    </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'un-rule-select',
+
+        properties: {
+          name: {
+            type: String,
+            value: null
+          },
+          label: {
+            type: String,
+            value: null
+          },
+          selected: {
+            type: String,
+            notify: true,
+            value: ''
+          },
+          items: Array,
+
+          dropdownOpen: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          }
+        },
+
+        get _select() {
+          return Polymer.dom(this.root).querySelector('select');
+        },
+
+        get _dropdown() {
+          return Polymer.dom(this.root).querySelector('.dropdown');
+        },
+
+        attached: function() {
+          // Polymer.Base.transform('translateY(-36px)', this._dropdown);
+          // this._select.addEventListener('change', this._onselect.bind(this));
+        },
+
+        detached: function() {
+          this._select.removeEventListener('change', this._onselect.bind(this));
+        },
+
+        _computeLabel: function(label, name, selected) {
+          if (selected) {
+            return selected;
+          }
+          return label ? label : name;
+        },
+
+        _toggleDropdown: function() {
+          this.dropdownOpen = !this.dropdownOpen;
+        },
+
+        _onselect: function(event) {
+          console.log(event);
+          this.selected = event.model.__data__.item;
+          this._toggleDropdown();
+        }
+      });
+    })();
+  </script>
+</dom-module>

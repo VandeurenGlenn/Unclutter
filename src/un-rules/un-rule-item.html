@@ -1,0 +1,78 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="un-rule-select.html">
+<link rel="import" href="un-rule-input.html">
+<dom-module id="un-rule-item">
+  <template>
+    <style>
+      :host {
+        padding: 0.4em 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      un-rule-select {
+        margin-right: 0.6em;
+      }
+    </style>
+
+    <un-rule-select name="by[[index]]" selected="{{by}}" items="[[config.by]]"></un-rule-select>
+    <un-rule-select name="if[[index]]" selected="{{if}}" items="[[_computeIf(by, config.if)]]"></un-rule-select>
+
+    <un-rule-input name="input" value="{{query}}"></un-rule-input>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'un-rule-item',
+
+        properties: {
+          result: {
+            type: Object,
+            notify: true,
+            computed: '_computeResult(by, if, query)'
+          },
+          by: {
+            type: String,
+            value: 'name'
+          },
+
+          if: {
+            type: String,
+            value: 'is'
+          },
+
+          query: {
+            type: String,
+            value: null
+          },
+
+          config: Object,
+
+          index: Number
+        },
+
+        _computeResult(a, b, c) {
+          if (a && b && c) {
+            var result = {
+              by: a,
+              if: b,
+              input: c
+            };
+            this.fire('result-change', result);
+            return result;
+          }
+        },
+
+        _computeIf: function(by, item) {
+          if (by === 'date last modified') {
+            by = 'date';
+          }
+          this.if = item[by][0];
+          return item[by];
+        }
+      });
+    })();
+  </script>
+</dom-module>

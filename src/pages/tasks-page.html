@@ -1,0 +1,120 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+<link rel="import" href="../un-rules/un-rules.html">
+<link rel="import" href="../templates/header-template.html">
+<dom-module id="tasks-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+      }
+      :host(.hidden) {
+        display: none;
+      }
+      .center {
+        @apply(--un-center-absolute);
+      }
+      .list {
+        display: flex;
+        flex-direction: column;
+      }
+      .list-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: #FFF;
+        padding: 0.6em 0.8em;
+      }
+      .flex {
+        flex: 1;
+      }
+      .headline {
+        @apply(--paper-font-headline);
+      }
+    </style>
+
+    <div class="toolbar">
+
+    </div>
+
+    <header-template>
+      <span class="title">tasks</span>
+      <div class="taskbar">
+        <span class="headline">task</span>
+        <span class="flex"></span>
+        filter by status / sort by status
+      </div>
+
+      <template is="dom-if" if="[[tasks]]">
+        <div class="list">
+          <!-- TODO: hadle on-active-change -->
+          <template is="dom-repeat" items="[[tasks]]">
+              <div class="list-item">
+                [[item.name]]
+                <span class="flex"></span>
+                  <un-button is="toggle"
+                    label="disabled"
+                    active-label="enabled"
+                    default-title="enable task"
+                    active-title="disable task"
+                    on-active-change="_onActiveChange"
+                    active$="[[item.options.enabled]]">
+                  </un-button>
+                </div>
+          </template>
+        </div>
+      </template>
+    </header-template>
+
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'tasks-page',
+
+        properties: {
+          dialogOpened: {
+            type: Boolean,
+            value: false
+          },
+
+          taskFolder: {
+            type: Object,
+            value: null
+          },
+          taskName: String,
+
+          hidden: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+
+          rules: Array,
+
+          globals: Object,
+
+          options: Object,
+
+          tasks: {
+            type: Object,
+            readOnly: true
+          }
+        },
+
+        attached: function() {
+          this._setTasks(app.tasks);
+        },
+
+        _onActiveChange: function(event) {
+          var index = event.model.__data__.index;
+          var task = this.tasks[index];
+          task.options.enabled = event.detail;
+          app.updateTask(task.name, task);
+        }
+      });
+    })();
+  </script>
+</dom-module>

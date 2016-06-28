@@ -1,0 +1,102 @@
+<link rel="import" href="bower_components/paper-styles/shadow.html">
+<link rel="import" href="styles/styles.html">
+<link rel="import" href="bower_components/theme-element/theme-element.html">
+
+<link rel="import" href="task-elements/task-dialog.html">
+
+<dom-module id="un-app">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        cursor: default;
+      }
+      un-pages {
+        background: var(--light-primary-background-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      un-button[is="fab"] {
+        position: fixed;
+        bottom: 56px;
+        right: 56px;
+      }
+    </style>
+    <un-pages>
+      <dashboard-page name="dashboard"></dashboard-page>
+      <tasks-page name="tasks"></tasks-page>
+      <monitor-page name="monitor"></monitor-page>
+      <!-- <un-page name="tasks">tasks</un-page> -->
+      <un-page name="settings"></un-page>
+    </un-pages>
+
+    <un-button is="fab"
+      name="new"
+      label="new task"
+      on-tap="new">
+      <iron-icon icon="un-icons:add"></iron-icon>
+    </un-button>
+
+    <task-dialog></task-dialog>
+    <theme-element themes="[[defaultTheme]]" selected="default" host="[[_host]]"></theme-element>
+    <unclutter-progress></unclutter-progress>
+  </template>
+  <script>
+    require('./scripts/ui/un-pages.js');
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'un-app',
+
+        properties: {
+          defaultTheme: {
+            type: Object,
+            value: function() {
+              return [{name: "default", href: this.resolveUrl('styles/styles.html')}];
+            }
+          },
+
+          _host: {
+            type: HTMLElement,
+            value: function() {
+              return this;
+            }
+          }
+        },
+
+        listeners: {
+          'new-task': '_onNewTask'
+        },
+
+        get progressElement() {
+          return Polymer.dom(this.root).querySelector('unclutter-progress');
+        },
+
+        get taskDialog() {
+          return Polymer.dom(this.root).querySelector('task-dialog');
+        },
+
+        attached: function() {
+          app._fireResize();
+        },
+
+        new: function(event) {
+          console.log(event);
+          this.taskDialog.open();
+        },
+
+        _onNewTask(event) {
+          app.updateTasks(event.detail);
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

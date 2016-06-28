@@ -1,0 +1,151 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/file-input/file-input.html">
+<dom-module id="performs-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .rule-item-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.8em 0;
+      }
+      span {
+        padding: 0 0.6em;
+      }
+
+      span.heading {
+        padding-left: 0;
+      }
+    </style>
+    <h2>when</h2>
+    <div class="rule-item-container">
+      <un-rule-select name="match" selected="{{match}}" items="[[matches]]"></un-rule-select>
+      <span>match</span>
+    </div>
+    <h2>perform</h2>
+    <div class="rule-item-container">
+      <un-rule-select name="do" selected="{{_do}}" items="[[does]]"></un-rule-select>
+      <template is="dom-if" if="[[_computeTo(_do)]]">
+        <span>to</span>
+        <template is="dom-if" if="[[_computeRename(_do)]]">
+          <input type="text" name="name" value="">
+        </template>
+
+        <template is="dom-if" if="[[!_computeRename(_do)]]">
+          <file-input type="file" name="[[_do]]" directory multiple on-file="onLocationSelect">select location</file-input>
+        </template>
+      </template>
+    </div>
+
+    <h2>options</h2>
+    <div class="rule-item-container">
+      <span class="heading">folder depth:</span>
+      <un-rule-input type="number" name="folderDepth" value="{{folderDepth::bind}}" style="max-width: 64px;"></un-rule-input>
+    </div>
+    <div class="rule-item-container">
+      <un-button is="toggle"
+        label="enabled"
+        default-title="enable task"
+        active-title="disable task"
+        on-active-change="_onActiveChange"
+        active$="[[enabled]]">
+      </un-button>
+      <un-button is="toggle"
+        label="archive"
+        default-title="enable compression (creates an Gzip)"
+        active-title="disable compression"
+        on-active-change="_onActiveChange"
+        active$="[[archive]]">
+      </un-button>
+    </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'performs-view',
+
+        properties: {
+          result: {
+            type: String,
+            notify: true,
+            computed: '_computeResult(match, _do, _doOption, enabled, archive, folderDepth)'
+          },
+
+          _do: {
+            type: String,
+            value: 'move'
+          },
+
+          _doOption: {
+            type: String,
+            value: null
+          },
+
+          match: {
+            type: String,
+            value: 'all'
+          },
+
+          enabled: {
+            type: Boolean,
+            value: true
+          },
+
+          archive: {
+            type: Boolean,
+            value: false
+          },
+
+          folderDepth: {
+            type: Number,
+            value: 1
+          },
+
+          matches: Object,
+          does: Object
+        },
+
+        _onActiveChange: function(event) {
+          this[Polymer.dom(event).rootTarget.label] = event.detail;
+        },
+
+        _computeTo: function(a) {
+          if (a !== 'remove') {
+            return true;
+          }
+          return false;
+        },
+
+        _computeRename: function(a) {
+          if (a === 'rename') {
+            return true;
+          }
+          return false;
+        },
+
+        onLocationSelect: function(event) {
+          // this.rule = this._computeRule(this._by, this._if, this._do)
+          var opt = event.detail;
+          this._doOption =  opt.path;
+        },
+
+        _computeResult(a, b, c, d, e, f) {
+          if (a && b && c) {
+            var result = {
+              match: a,
+              do: {name: b, path: c},
+              options: {enabled: d, archive: e, folderDepth: f}
+            }
+            this.fire('data-update', {name: 'performs', data: result});
+            return result;
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

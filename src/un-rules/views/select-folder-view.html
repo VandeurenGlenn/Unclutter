@@ -1,0 +1,78 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../un-rule-input.html">
+<link rel="import" href="../un-rules-shared-styles.html">
+<link rel="import" href="../../bower_components/file-input/file-input.html">
+
+<dom-module id="select-folder-view">
+  <style include="un-rules-shared-styles"></style>
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      un-button iron-icon {
+        padding-left: 0.6em;
+      }
+    </style>
+    <h1 class="sectiontitle">create new task</h1>
+    <div class="rule-item-container">
+      <span class="headline">folder :</span>
+      <file-input
+        type="file"
+        name="name"
+        directory
+        on-file="onFolderSelect">
+        <un-button is="icon-button"
+          default-title="select folder to perform rules on"
+          label="select folder"
+          icon="un-icons:folder-open"
+          shadow>
+        </un-button>
+      </file-input>
+    </div>
+    <!-- <div class="item-container">
+      <span class="headline">name :</span>
+      <un-rule-input name="name" value="{{result.name}}"></un-rule-input>
+    </div> -->
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'select-folder-view',
+
+        properties: {
+          taskFolder: Object,
+          taskName: String,
+
+          /**
+           * the selected folder
+           */
+           folder: {
+             type: Object,
+             notify: true
+           }
+        },
+
+        _fireNext() {
+          this.fire('finish');
+        },
+
+        _computeResult: function(folder) {
+          return {
+            name: folder.name,
+            folder: folder
+          }
+        },
+
+        onFolderSelect: function(event) {
+          this.folder = event.detail;
+          this.fire('finish');
+          this.fire('data-update', {name: 'folder', data: this.folder});
+          // this.fire('new-folder', event.detail);
+        },
+      });
+    })();
+  </script>
+</dom-module>

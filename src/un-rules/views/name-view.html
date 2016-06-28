@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../un-rules-shared-styles.html">
+
+<dom-module id="name-view">
+  <template>
+    <style include="un-rules-shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="rule-item-container">
+      <span class="headline">name :</span>
+      <un-rule-input name="name" value="{{taskName}}"></un-rule-input>
+    </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'name-view',
+
+        properties: {
+          taskName: {
+            type: String,
+            notify: true,
+            observer: '__onTaskNameChange__'
+          }
+        },
+
+        __onTaskNameChange__(name) {
+          this.fire('name-update', {name: 'name', data: name});
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,223 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<dom-module id="header-template">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      un-drawer {
+        /*position: absolute;
+        top: 0;
+        left: 0;*/
+        width: 256px;
+        height: 100%;
+        background: #EEEEEE;
+        border-right: 1px solid rgba(0, 0, 0, 0.14);
+      }
+      .menu-title, .app-title {
+        @apply(--paper-font-headline);
+      }
+      .title {
+        @apply(--paper-font-title);
+      }
+      .drawer-header {
+        height: 112px;
+        display: flex;
+        align-items: flex-end;
+        border-bottom: 1px solid rgba(0, 0, 0, var(--light-divider-opacity));
+      }
+      .toolbar, ::content .taskbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.6em 0.8em;
+        box-sizing: border-box;
+      }
+      .toolbar {
+        height: 64px;
+        background: var(--un-primary-color);
+      }
+      ::content .taskbar {
+        height: 48px;
+        background: var(--un-light-primary-color);
+      }
+      span {
+        padding-left: 8px;
+      }
+      .dropshadow {
+        height: 6px;
+        width: 100%;
+        opacity: 1;
+        pointer-events: none;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+        will-change: opacity;
+        transition: opacity 0.5s;
+      }
+      :host([top]) .dropshadow {
+        opacity: 0;
+      }
+
+      :host([desktop]) ::content .taskbar iron-icon[drawer-toggle] {
+        display: none;
+      }
+
+      main {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100%;
+      }
+    </style>
+    <un-drawer>
+      <un-drawer-item name="dashboard" onclick="app.routeItemClick(event)">dashboard</un-drawer-item>
+      <un-drawer-item name="tasks" onclick="app.routeItemClick(event)">tasks</un-drawer-item>
+      <un-drawer-item name="monitor" onclick="app.routeItemClick(event)">monitor</un-drawer-item>
+    </un-drawer>
+
+    <main>
+      <header>
+        <template is="dom-if" if="[[!headerBarHidden]]">
+          <div class="toolbar">
+            <iron-icon icon="un-icons:menu" on-tap="toggleDrawer"></iron-icon>
+            <span class="app-title">UnClutter</span>
+            <span class="title"><content select=".title"></content></span>
+          </div>
+        </template>
+        <content select=".taskbar"></content>
+      </header>
+      <div class="dropshadow"></div>
+
+      <content></content>
+    </main>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'header-template',
+
+        properties: {
+          headerBarHidden: {
+            type: Boolean,
+            value: false
+          },
+
+          drawerToggleAttribute: {
+            type: String,
+            value: 'drawer-toggle'
+          },
+
+          desktop: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          }
+        },
+
+        attached: function() {
+          this.drawerWidth = this.drawer.drawerWidth;
+          this._listeners = {'app-resize': '_onResize'};
+        },
+
+        listeners: {
+          'tap': '_onTap'
+        },
+
+        detached: function() {
+          this._removeListeners();
+        },
+
+        set _listeners(obj) {
+            // fo
+          for (let key of Object.keys(obj)) {
+            document.addEventListener(key, this[obj[key]].bind(this));
+          }
+        },
+
+        get drawer() {
+          return Polymer.dom(this.root).querySelector('un-drawer');
+        },
+
+        get drawerOpen() {
+          return this.drawer.opened;
+        },
+
+        set drawerOpen(value) {
+          this.drawer.opened = value;
+          if (value) {
+            this.setAttribute('drawer-open', '');
+          } else {
+            this.removeAttribute('drawer-open');
+          }
+          this._resizeMain();
+        },
+
+        get main() {
+          return Polymer.dom(this.root).querySelector('main');
+        },
+
+        get drawerWidth() {
+          return this.drawer.drawerWidth
+        },
+
+        set drawerWidth(width) {
+          if (this.drawer.drawerWidth !== width) {
+            this.drawer.drawerWidth = width;
+          }
+        },
+
+        _qs: function(el, selector) {
+          el.querySelector(selector);
+        },
+
+        _removeListeners: function() {
+          for (let key of Object.keys(this._listeners)) {
+            document.removeEventListener(key, this[this._listeners[key]].bind(this));
+          }
+        },
+
+        _onResize: function(event) {
+          let width = event.detail.width;
+          if (width < 960) {
+            // this.drawer.close()
+            this.desktop = false;
+            this.drawerOpen = false;
+          } else if (!this.drawerOpen) {
+            // this.drawer.open()
+            this.desktop = true;
+            this.drawerOpen = true;
+          }
+          // this._resizeMain();
+        },
+
+        _resizeMain: function(drawerOpen) {
+          var main = this.main;
+          if (this.drawerOpen) {
+            main.style.width = `calc(100% - ${this.drawerWidth})`;
+            main.style.right = this.drawerRight ? 'auto' : 0;
+            main.style.left = this.drawerRight ? 0 : 'auto';
+          } else {
+            main.style.width = '100%';
+          }
+        },
+
+        toggleDrawer: function() {
+          this.drawerOpen = !this.drawerOpen;
+        },
+
+        _onTap(event) {
+          var rootTarget = Polymer.dom(event).rootTarget;
+          if (rootTarget[this.drawerToggleAttribute] ||
+              rootTarget.hasAttribute(this.drawerToggleAttribute)) {
+            this.toggleDrawer();
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

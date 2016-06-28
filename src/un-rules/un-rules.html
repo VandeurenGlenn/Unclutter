@@ -1,0 +1,29 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="un-rule-box.html">
+<dom-module id="un-rules">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+      @media (min-width: 640px) {
+        :host {
+          flex: 1;
+          /*width: 640px;*/
+        }
+      }
+    </style>
+    <un-rule-box></un-rule-box>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'un-rules'
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>UnClutter</title>
+
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer = {lazyRegister: true, dom: 'shadow'};
+    </script>
+    <link rel="import" href="bower_components/polymer/polymer-micro.html">
+    <link rel="import" href="un-app.html">
+  </head>
+  <style>
+    body {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: 0;
+    }
+  </style>
+  <body>
+    <un-app></un-app>
+  </body>
+
+  <script>
+    require('./renderer.js');
+  </script>
+</html>

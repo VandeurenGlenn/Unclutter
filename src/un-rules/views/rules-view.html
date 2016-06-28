@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../un-rule-select.html">
+<link rel="import" href="../un-rule-item.html">
+<dom-module id="rules-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>rules</h2>
+    <template is="dom-repeat" items="[[_rulesLength]]">
+      <un-rule-item index="[[index]]" config="[[config]]" on-result-change="_onResultChange"></un-rule-item>
+    </template>
+
+    <un-button name="add rule" on-tap="_addRule">add rule</un-button>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'rules-view',
+
+        properties: {
+          /**
+           * the number of rules you want in the list
+           */
+          _rulesLength: {
+            type: Array,
+            value: ['1']
+          },
+
+          rules: {
+            type: Array,
+            notify: true,
+            value: []
+          },
+
+          config: Object
+        },
+
+        _addRule: function() {
+          this.push('_rulesLength', this.rules.length);
+        },
+
+        _onResultChange(event) {
+          var index = event.model.__data__.index;
+          if (!this.rules[index]) {
+            this.push('rules', event.detail);
+          } else if (this.rules[index]) {
+            this.rules[index] = event.detail;
+          }
+          console.log(this.rules);
+          this.fire('rules-update', {name: 'rules', data: this.rules});
+        }
+      });
+    })();
+  </script>
+</dom-module>

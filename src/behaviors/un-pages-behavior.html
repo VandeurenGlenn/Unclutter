@@ -1,0 +1,22 @@
+<script>
+  var Un = Un || {};
+
+  Un.PagesBehavior = {
+    properties: {
+      selected: {
+        type: String,
+        observer: '__selectedChanged__'
+      },
+
+      prefix: String
+    },
+
+    get prefix() {
+      return this.getAttribute('perfix') || `pages/${this.selected}-page.html`;
+    },
+
+    __selectedChanged__(selected) {
+      promiseLazyLoad(this.resolveUrl(this.prefix));
+    },
+  };
+</script>

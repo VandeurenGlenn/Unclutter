@@ -1,0 +1,247 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="un-rule-select.html">
+<dom-module id="un-rule-box">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 0.6em 0;
+      }
+      input {
+        padding: 0.4em 0.6em;
+        box-sizing: border-box;
+        height: 36px;
+        border: none;
+        outline: none;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        /*padding: 0.6em 0.8em;*/
+      }
+      /*input:focus {
+        outline: none;
+      }*/
+      un-rule-select {
+        margin-right: 0.6em;
+      }
+      span {
+        padding-right: 0.6em;
+      }
+      .buttons-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 1.2em 1.4em;
+        box-sizing: border-box;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .flex {
+        flex: 1;
+      }
+      iron-pages {
+        min-height: 180px;
+        padding-bottom: 32px;
+      }
+    </style>
+
+    <iron-pages selected="{{selected}}" attr-for-selected="name">
+      <select-folder-view name="select-folder" folder="{{folder}}" on-data-update="_onDataUpdate"></select-folder-view>
+
+      <name-view name="name" task-name="[[folder.name]]" on-name-update="_onDataUpdate"></name-view>
+
+      <rules-view name="rules" rules="{{rules}}" config="[[config]]" on-rules-update="_onDataUpdate"></rules-view>
+
+      <performs-view name="performs"
+        matches="[[config.match]]"
+        does="[[config.do]]"
+        on-data-update="_onDataUpdate"></performs-view>
+
+    </iron-pages>
+
+    <div class="buttons-container">
+      <template is="dom-if" if="[[_computeShowPrevious(selected)]]">
+        <un-button is="fab" icon="un-icons:chevron-left" on-tap="previous" mini>previous</un-button>
+      </template>
+      <span class="flex"></span>
+      <un-button is="fab" icon$="[[_computeFabIcon(selected)]]" on-tap="next" mini>[[_computeConfirm(selected)]]</un-button>
+    </div>
+    <!-- <un-rule-section> -->
+      <!-- <template is="dom-repeat" items="[[_rules]]">
+        <div class="rule-item-container">
+          <un-rule-select name="by" selected="{{_by}}" items="[[options.by]]"></un-rule-select>
+          <un-rule-select name="if" selected="{{_if}}" items="[[_computeIf(_by, options.if)]]"></un-rule-select>
+
+          <input type="text" name="input" value="{{_input::change}}">
+        </div>
+      </template> -->
+    <!-- </un-rule-section> -->
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'un-rule-box',
+
+        properties: {
+          name: String,
+
+          rule: {
+            type: Object,
+            notify: true,
+            computed: '_computeRule(rules, performs, options)'
+          },
+
+          config: {
+            type: Object,
+            value: function() {
+              return {
+                by: ['name', 'extension', 'size', 'date last modified'],
+                if: {
+                  name: ['is', 'contains', 'does not contains'],
+                  extension: ['is', 'contains', 'does not contains'],
+                  size: ['is', 'is not', 'is greater than', 'is greater than or equal', 'is less than', 'is less than or equal'],
+                  date: ['is in the last', 'is not in the last']
+                },
+                match: ['all', 'some'],
+                do: ['move', 'copy', 'rename', 'remove']
+              }
+            }
+          },
+          // todo import views
+          selected: {
+            type: String,
+            value: 'select-folder',
+            observer: '__selectedChanged__'
+          },
+
+          rules: Array,
+
+          data: {
+            type: Object,
+            value: {}
+          }
+        },
+
+        listeners: {
+          'finish': 'next'
+        },
+
+        get _pagesElement() {
+          return Polymer.dom(this.root).querySelector('iron-pages');
+        },
+
+        _computeShowPrevious: function(a) {
+          if (a !== 'select-folder') {
+            return true;
+          }
+          return false;
+        },
+
+        _computeFabIcon: function(a) {
+          if (a === 'performs') {
+            return 'un-icons:check';
+          }
+          return 'un-icons:chevron-right';
+        },
+
+        _computeConfirm: function(a) {
+          if (a === 'perfoms') {
+            return 'confirm';
+          }
+          return 'next';
+        },
+
+        _computeRules: function(optBy, optIf) {
+          return {
+            by: optBy,
+            if: optIf
+          };
+        },
+
+        _computeRule: function(rules, performs) {
+        console.log(rules, performs);
+          if (rules && performs) {
+            var rule = {
+              match: match,
+              by: rules.by,
+              if: rules.if,
+              input: rules.input,
+              do: performs.do
+            };
+            var options = {
+              enabled: performs.options.enabled,
+              archive: performs.options.archive
+            }
+            this.fire('rule-added', rule);
+            this.fire('options-added', options);
+            return rule;
+          }
+        },
+
+        __selectedChanged__: function(selected) {
+          promiseLazyLoad(this.resolveUrl(`views/${selected}-view.html`));
+        },
+
+        next: function() {
+          if (this.selected === 'performs') {
+            this.save()
+          } else {
+            this._pagesElement.selectNext();
+          }
+        },
+
+        previous: function() {
+          this._pagesElement.selectPrevious();
+        },
+
+        _onDataUpdate(event) {
+          var update = event.detail;
+          // console.log(this.data);
+
+          this.data[update.name] = update.data;
+          console.log(this.data);
+        },
+
+        _beautifyFolder: function(folder) {
+          // get rid off prototype method's
+          var _folder = {};
+          for (var prop in folder) {
+            if (typeof folder[prop] !== 'function' && folder[prop]) {
+              _folder[prop] = folder[prop];
+            }
+          }
+          return _folder;
+        },
+
+        save: function() {
+          // var guid = Guid.create();
+          // if (this.rules.length > 0) {
+            this.fire('new-task', {
+              // uid:
+              name: this.data['name'],
+              options: this.data['performs'].options,
+              match: this.data['performs'].match,
+              rules: this.data['rules'],
+              do: this.data['performs'].do,
+              folder: this._beautifyFolder(this.data['folder'])
+            });
+          // }
+          console.log({
+            // uid:
+            name: this.data['name'],
+            options: this.data['performs'].options,
+            match: this.data['performs'].match,
+            rules: this.data['rules'],
+            folder: this._beautifyFolder(this.data['folder'])
+          });
+          delete this.data;
+        }
+      });
+    })();
+  </script>
+</dom-module>

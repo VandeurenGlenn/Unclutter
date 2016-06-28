@@ -1,0 +1,156 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../templates/header-template.html">
+<dom-module id="monitor-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .taskbar {
+        background: #eee !important;
+      }
+      paper-card {
+        min-width: 320px;
+        background: #fefefe;
+      }
+      .heading {
+        opacity: var(--light-primary-opacity);
+        text-transform: uppercase;
+        @apply(--paper-font-title1);
+      }
+      .taskbar, .horizontal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.4em 0.6em;
+        box-sizing: border-box;
+      }
+      .headline {
+        margin: 0;
+        padding: 0 0.4em;
+        @apply(--paper-font-headline);
+        text-transform: uppercase;
+      }
+      .content {
+        padding: 0 1.2em;
+        box-sizing: border-box;
+      }
+      .section {
+        padding: 1.2em 0;
+        box-sizing: border-box;
+      }
+      .section .headline {
+        padding: 0;
+      }
+    </style>
+    <header-template header-bar-hidden>
+      <div class="taskbar">
+        <iron-icon icon="un-icons:menu" drawer-toggle></iron-icon>
+        <span class="headline">monitor</span>
+      </div>
+      <template is="dom-if" if="[[tasks]]">
+        <div class="content">
+          <div class="section">
+            <h2 class="headline">progress</h2>
+          </div>
+          <template is="dom-repeat" items="[[tasks]]" index-as="index">
+            <paper-card heading="TASK: [[_computeUppercase(item.name)]]">
+              <div class="card-content">
+                <template is="dom-if" if="[[_computeRunning(tasks.*, index)]]">
+                  <template is="dom-repeat" items="[[_computeRules(tasks.*, index)]]" index-as="index">
+                    <div class="horizontal">
+                      <span>[[item.input]]:</span>
+                      <unclutter-progress-bar name$="[[index]]"></unclutter-progress-bar>
+                    </div>
+                  </template>
+                </template>
+                <template is="dom-if" if="[[!_computeRunning(tasks.*, index)]]">
+                  <span>nothing to do</span>
+                </template>
+              </div>
+            </paper-card>
+          </template>
+
+          <div class="section">
+            <h2 class="headline">timeline (aka history...)</h2>
+            coming soon ...
+          </div>
+        </div>
+      </template>
+    </header-template>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'monitor-page',
+        properties: {
+          tasks: {
+            type: Array,
+            value: function() {
+              return []
+            }
+          },
+
+          progressItems: {
+            type: Object,
+            value: {}
+          }
+        },
+
+        ready: function() {
+          this.tasks = app.tasks;
+        },
+
+        _queryRoot: function(query) {
+          return Polymer.dom(this.root).querySelector(query);
+        },
+
+        getProgressBar: function(key) {
+          return this._queryRoot(`unclutter-progress-bar[name="${key}"]`);
+        },
+
+        updateProgressBar: function(target, obj) {
+          target.progress = obj.progress;
+          target.total = obj.total;
+          target.done = obj.done;
+        },
+
+        updateProgressFor: function(target, obj) {
+          obj.progress = (obj.done / obj.total) * 100;
+          var bar = this.getProgressBar(target);
+          this.updateProgressBar(bar, obj);
+          if (obj.progress === 100) {
+            var name = target;
+            setTimeout(() => {
+              this.tasks.forEach((task, index) => {
+                if (name === task.name) {
+                  task.running = false;
+                  app.updateTask(task.name, task);
+                }
+              });
+            }, 10000);
+          }
+        },
+
+        isVisible: function(target) {
+          return Boolean(this.getProgressBar(target));
+        },
+
+        _computeUppercase(str) {
+          return str.toUpperCase()
+        },
+
+        _computeRunning: function(change, index) {
+          return change.value[index].running;
+        },
+
+        _computeRules: function(change, index) {
+          return change.value[index].rules;
+        }
+      });
+    })();
+  </script>
+</dom-module>
