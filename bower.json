@@ -9,7 +9,7 @@
   "keywords": [
     "UnClutter"
   ],
-  "homepage": "https://vandeurenglenn/unclutter",
+  "homepage": "https://github.com/vandeurenglenn/unclutter",
   "private": true,
   "ignore": [
     "**/.*",
@@ -27,6 +27,7 @@
     "paper-styles": "^1.1.4",
     "theme-element": "^1.1.0",
     "polymer": "Polymer#^1.5.0",
-    "iron-pages": "^1.0.7"
+    "iron-pages": "^1.0.7",
+    "paper-card": "PolymerElements/paper-card#^1.1.1"
   }
 }
