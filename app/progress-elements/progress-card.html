@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="progress-bar.html">
+<dom-module id="progress-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-card heading="progress">
+      <div class="card-content">
+        <div class="item-container">
+          <h4 class="heading">task: [[item.name]]</h4>
+          <template is="dom-if" if="[[_compute(tasks.*, index)]]">
+            <template is="dom-repeat" items="[[_computeRules(tasks.*, index)]]" index-as="index">
+              <div class="horizontal">
+                <span>[[item.input]]:</span>
+                <unclutter-progress-bar name$="[[index]]"></unclutter-progress-bar>
+              </div>
+            </template>
+          </template>
+          <template is="dom-if" if="[[!_compute(tasks.*, index)]]">
+            <span>nothing to do</span>
+          </template>
+        </div>
+      </div>
+      <div class="card-actions"></div>
+    </paper-card>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'progress-card',
+
+        properties: {
+          item: Object,
+          items: Array
+        }
+
+        _compute: function(change, index) {
+          return change.value[index].running;
+        },
+
+        _computeRules: function(change, index) {
+          return change.value[index].rules;
+        }
+      });
+    })();
+  </script>
+</dom-module>
