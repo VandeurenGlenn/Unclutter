@@ -8,7 +8,7 @@ function click(eventName) {
 }
 class TrayMenu {
   constructor() {
-    this.icon = 'resources/unclutter_icon.ico';
+    this.icon = 'resources/icon.ico';
     this.tooltip = name;
     this.contextMenu = [
       {

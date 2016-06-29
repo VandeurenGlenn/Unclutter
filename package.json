@@ -1,6 +1,12 @@
 {
+  "build": {
+    "appId": "BasicElements.Unclutter",
+    "app-category-type": "public.app-category.utilities"
+  },
   "scripts": {
-    "start": "electron app/main.js --debug=8000",
+    "start": "electron app/main.js",
+    "pack": "build --dir",
+    "dist": "build",
     "build": ".\build.sh"
   },
   "devDependencies": {
