@@ -7,13 +7,12 @@
     "start": "electron app/main.js",
     "pack": "build --dir",
     "dist": "build",
-    "build": ".\build.sh"
+    "release": "build"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "electron-builder": "^5.10.2",
     "electron-prebuilt": "^1.2.0",
-    "electron-rebuild": "^1.1.5",
     "eslint": "^2.11.1",
     "eslint-config-google": "^0.5.0"
   }
