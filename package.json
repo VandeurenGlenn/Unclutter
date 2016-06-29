@@ -1,29 +1,8 @@
 {
-  "name": "un-clutter",
-  "productName": "UnClutter",
-  "version": "0.1.0",
-  "description": "A folder/file organizer for Windows, Mac & Linux",
-  "main": "src/main.js",
   "scripts": {
-    "start": "electron src/main.js --debug=8000",
+    "start": "electron app/main.js --debug=8000",
     "build": ".\build.sh"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vandeurenglenn/unclutter.git"
-  },
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial"
-  ],
-  "author": "Glenn Vandeuren <vandeurenglenn@gmail.com>",
-  "license": "CC-BY-NC-SA",
-  "bugs": {
-    "url": "https://github.com/vandeurenglenn/unclutter/issues"
-  },
-  "homepage": "https://github.com/vandeurenglenn/unclutter#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "electron-builder": "^5.10.2",
@@ -31,13 +10,5 @@
     "electron-rebuild": "^1.1.5",
     "eslint": "^2.11.1",
     "eslint-config-google": "^0.5.0"
-  },
-  "dependencies": {
-    "chokidar": "^1.5.2",
-    "del": "^2.2.0",
-    "electron-workers": "^1.7.0",
-    "guid": "0.0.12",
-    "install": "^0.8.1",
-    "zlib": "^1.0.5"
   }
 }

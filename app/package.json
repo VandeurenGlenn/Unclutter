@@ -1,0 +1,32 @@
+{
+  "name": "un-clutter",
+  "productName": "UnClutter",
+  "version": "0.1.0",
+  "description": "A folder/file organizer for Windows, Mac & Linux",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vandeurenglenn/unclutter.git"
+  },
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial"
+  ],
+  "author": "Glenn Vandeuren <vandeurenglenn@gmail.com>",
+  "license": "CC-BY-NC-SA",
+  "copyright": "© 2016, Glenn Vandeuren",
+  "bugs": {
+    "url": "https://github.com/vandeurenglenn/unclutter/issues"
+  },
+  "homepage": "https://github.com/vandeurenglenn/unclutter#readme",
+  "dependencies": {
+    "chokidar": "^1.5.2",
+    "del": "^2.2.0",
+    "electron-workers": "^1.7.0",
+    "guid": "0.0.12",
+    "install": "^0.8.1",
+    "zlib": "^1.0.5"
+  }
+}
