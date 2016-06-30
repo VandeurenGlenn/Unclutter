@@ -1,5 +1,3 @@
-version: 0.1.0_alpha-{build}
-
 platform:
   - x64
 

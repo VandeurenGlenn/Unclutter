@@ -12,12 +12,15 @@
     "start": "electron ./app",
     "pack": "build --dir",
     "dist": "build",
-    "release": "build"
+    "release": "build",
+    "test": "mocha"
   },
   "devDependencies": {
     "electron-builder": "next",
     "electron-prebuilt": "1.2.5",
     "eslint": "^2.11.1",
-    "eslint-config-google": "^0.5.0"
+    "eslint-config-google": "^0.5.0",
+    "mocha": "^2.5.3",
+    "spectron": "^3.2.3"
   }
 }

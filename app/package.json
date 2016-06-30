@@ -1,7 +1,7 @@
 {
   "name": "UnClutter",
   "productName": "UnClutter",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "A folder/file organizer for Windows, Mac and Linux",
   "main": "./main.js",
   "repository": {
