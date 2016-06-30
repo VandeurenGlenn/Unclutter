@@ -1,18 +1,20 @@
 {
   "build": {
-    "appId": "BasicElements.Unclutter",
+    "appId": "com.basicelements.unclutter",
     "app-category-type": "public.app-category.utilities"
   },
   "scripts": {
-    "start": "electron app/main.js",
+    "postinstall": "install-app-deps",
+    "install": "npm run postinstall",
+    "start": "electron ./app",
     "pack": "build --dir",
     "dist": "build",
     "release": "build"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
-    "electron-builder": "^5.10.2",
-    "electron-prebuilt": "^1.2.0",
+    "electron-builder": "next",
+    "electron-prebuilt": "1.2.5",
     "eslint": "^2.11.1",
     "eslint-config-google": "^0.5.0"
   }
