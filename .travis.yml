@@ -24,12 +24,20 @@ addons:
     packages:
       - libgnome-keyring-dev
       - icnsutils
+before_script:
+  - '[ "{$TRAVIS_OS_NAME}" == "linux" ] &&  export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start && sleep 3'
 
 before_install:
   - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-$([ "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.0.tar.gz | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
 
-script: ./tasks/travis-build.sh
+install:
+- node --version
+- npm --version
+- nvm install 6
+- npm install bower -g
+- npm install electron-builder@next # force install next version to test electron-builder
+- npm install
+- npm prune
 
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+script:
+- '["{$TRAVIS_BRANCH}" == "master"] && npm run release'
