@@ -8,7 +8,7 @@ function click(eventName) {
 }
 class TrayMenu {
   constructor() {
-    this.icon = 'app/resources/icon.ico';
+    this.icon = `${__dirname}/../resources/icon.ico`;
     this.tooltip = name;
     this.contextMenu = [
       {
