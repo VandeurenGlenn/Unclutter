@@ -1,10 +1,13 @@
 {
   "build": {
     "appId": "com.basicelements.unclutter",
-    "app-category-type": "public.app-category.utilities"
+    "app-category-type": "public.app-category.utilities",
+    "win": {
+      "remoteReleases": "https://github.com/vandeurenglenn/unclutter"
+    }
   },
   "scripts": {
-    "postinstall": "install-app-deps",
+    "postinstall": "install-app-deps && bower install",
     "install": "npm run postinstall",
     "start": "electron ./app",
     "pack": "build --dir",
@@ -12,7 +15,6 @@
     "release": "build"
   },
   "devDependencies": {
-    "babel-cli": "^6.10.1",
     "electron-builder": "next",
     "electron-prebuilt": "1.2.5",
     "eslint": "^2.11.1",
