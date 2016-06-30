@@ -60,8 +60,11 @@ if (!multipleInstances) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
   if (!multipleInstances) {
-    app.setName('UnClutter');
     const tray = require(`${__dirname}/os-integration/tray`);
+    app.setName('UnClutter');
+
+    createWindow();
+
     tray.on('open-window', () => {
       if (mainWindow) {
         mainWindow.focus();
