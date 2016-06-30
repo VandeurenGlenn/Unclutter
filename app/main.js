@@ -23,7 +23,7 @@ let options = readFile(`${__dirname}/user-settings.json`).options;
  */
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, frame: false});
+  mainWindow = new BrowserWindow({width: 1024, height: 768, frame: false});
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -61,9 +61,11 @@ if (!multipleInstances) {
 app.on('ready', function() {
   if (!multipleInstances) {
     app.setName('UnClutter');
-    var tray = require('./os-integration/tray.js');
+    const tray = require(`${__dirname}/os-integration/tray`);
     tray.on('open-window', () => {
-      if (!mainWindow) {
+      if (mainWindow) {
+        mainWindow.focus();
+      } else {
         createWindow();
       }
     });
