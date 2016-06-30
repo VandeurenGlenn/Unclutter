@@ -14,7 +14,9 @@ class WatcherController {
       if (window.app.pageActive('monitor')) {
         window.app.monitorPage.updateProgressFor(progress.target, progress);
       }
-      window.app.app.progressElement.update(progress.target, progress);
+      if (window.app && window.app.app.progressElement) {
+        window.app.app.progressElement.update(progress.target, progress);
+      }
     });
     ipcRenderer.send('setup-new-watcher', data);
   }

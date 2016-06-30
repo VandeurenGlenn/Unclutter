@@ -22,7 +22,8 @@ class UnclutterProgressBar extends HTMLElement {
   attachedCallback() {
     helper.importStyle({scopeName: this.localName,
       style: `:host {
-        display: block;
+        display: flex;
+        flex-direction: row;
         width: 100%;
         // height: 32px;
         padding: 0.6em;
@@ -36,10 +37,10 @@ class UnclutterProgressBar extends HTMLElement {
         transition: opacity ease-in 0.8s;
       }
       .info {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
         opacity: 0;
         will-change: opacity;
         transition: opacity ease-out 0.8s;
@@ -57,7 +58,7 @@ class UnclutterProgressBar extends HTMLElement {
         background: green;
         // position: absolute;
         width: 100%;
-        height: 32px;
+        height: 24px;
         -webkit-transform-origin: left center;
         transform-origin: left center;
         -webkit-transform: scaleX(0);
@@ -295,6 +296,7 @@ class UnclutterProgress extends HTMLElement {
     return this._progressItems || {};
   }
   /**
+   * @arg {string} target the target to update
    * @arg {object} opt contains a
    */
   update(target, opt) {
@@ -313,9 +315,6 @@ class UnclutterProgress extends HTMLElement {
         this.root.removeChild(this.getProgressBar(key));
       }, 10000);
     }
-    // todo: jobListLength,
-    // done: this.jobCalls,
-    // value: `${(this.jobCalls / jobListLength) * 100}%`
   }
 }
 

@@ -5,7 +5,10 @@
   <template>
     <style>
       :host {
-        display: block;
+        display: flex;
+        position: relative;
+        height: 100%;
+        width: 100%;
       }
       .taskbar {
         background: #eee !important;
@@ -61,7 +64,7 @@
                   <template is="dom-repeat" items="[[_computeRules(tasks.*, index)]]" index-as="index">
                     <div class="horizontal">
                       <span>[[item.input]]:</span>
-                      <unclutter-progress-bar name$="[[index]]"></unclutter-progress-bar>
+                      <unclutter-progress-bar name$="[[item.input]]"></unclutter-progress-bar>
                     </div>
                   </template>
                 </template>

@@ -13,7 +13,8 @@ class WatcherWorker {
     this.done = data => {
       eventEmitter.emit('done', data);
     };
-    monitorWorker.on('done', e => {
+    monitorWorker.on('done', event => {
+      var opt = event.opt;
       if (!this.max) {
         this.max = monitorWorker.jobList.length;
       } else if (monitorWorker.jobList.length > this.max) {
@@ -23,9 +24,9 @@ class WatcherWorker {
         this.jobCalls = 0;
       }
       this.jobCalls += 1;
-      uncProcessed.addProcessedItem(e.opt.path);
+      uncProcessed.addProcessedItem(opt.path);
       eventEmitter.emit('progress-update', {
-        target: e.opt.ruleName,
+        target: opt.ruleName,
         total: this.max,
         done: this.jobCalls
       });

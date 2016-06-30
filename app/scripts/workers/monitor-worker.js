@@ -68,7 +68,7 @@ class MonitorWorker {
     this.busy = true;
     const workers = require('electron-workers')({
       connectionMode: 'ipc',
-      pathToScript: `${__dirname}/../main.js`,
+      pathToScript: `${__dirname}/../../main.js`,
       timeout: 5000,
       numberOfWorkers: 1
     });
