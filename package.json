@@ -1,10 +1,7 @@
 {
   "build": {
     "appId": "com.basicelements.unclutter",
-    "app-category-type": "public.app-category.utilities",
-    "win": {
-      "remoteReleases": "https://github.com/vandeurenglenn/unclutter"
-    }
+    "app-category-type": "public.app-category.utilities"
   },
   "scripts": {
     "postinstall": "install-app-deps && bower install",
