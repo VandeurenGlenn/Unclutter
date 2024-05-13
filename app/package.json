@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/vandeurenglenn/unclutter#readme",
   "dependencies": {
-    "chokidar": "^1.5.2",
+    "chokidar": "^3.0.0",
     "del": "^2.2.0",
     "electron-workers": "^1.7.0",
     "zlib": "^1.0.5"
